@@ -13,6 +13,20 @@ cloudflare_url="URL-CLOUDFLARE-TUNNEL-HERE"
 
 # CMD check interface--> networksetup -listallhardwareports
 
+echo -e "${ORANGE}"
+echo -e " ____  _             _      ___                               _   ";
+echo -e "/ ___|| |_ __ _ _ __| |_   / _ \__      ___ __   ___ __ _ ___| |_ ";
+echo -e "\___ \| __/ _' | '__| __| | | | \ \ /\ / / '_ \ / __/ _' / __| __|";
+echo -e " ___) | || (_| | |  | |_  | |_| |\ V  V /| | | | (_| (_| \__ \ |_ ";
+echo -e "|____/ \__\__,_|_|   \__|  \___/  \_/\_/ |_| |_|\___\__,_|___/\__|";
+echo -e "               _       _                                          ";
+echo -e " ___  ___ _ __(_)_ __ | |_                                        ";
+echo -e "/ __|/ __| '__| | '_ \| __|                                       ";
+echo -e "\__ \ (__| |  | | |_) | |_                                        ";
+echo -e "|___/\___|_|  |_| .__/ \__|                                       ";
+echo -e "                |_|                                               ";
+echo -e "${RESET}"
+
 # Funkce pro ziskani informaci o pripojeni
 get_connection_info()
 {
