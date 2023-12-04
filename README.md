@@ -24,3 +24,10 @@ To start the Owncast server including Cloudflare Tunnel, use the following comma
 
 ```bash
 ./start-owncast.sh
+
+### Stopping Owncast Server
+
+To gracefully stop the Owncast server, execute the following command:
+
+```bash
+./stop-owncast.sh
