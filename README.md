@@ -16,6 +16,9 @@ This repository contains scripts to conveniently start and stop the Owncast serv
    ```bash
    git clone https://github.com/your-username/owncast-server-scripts.git
    ```
+
+2. Check file, provide your URL and IPv4 adress of your machine.
+
 ## Usage
 
 ### Starting Owncast Server
