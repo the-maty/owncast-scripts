@@ -20,7 +20,7 @@ This repository contains scripts to conveniently start and stop the Owncast serv
 
 ### Starting Owncast Server
 
-To start the Owncast server, use the following command:
+To start the Owncast server including Cloudflare Tunnel, use the following command:
 
 ```bash
 ./start-owncast.sh
