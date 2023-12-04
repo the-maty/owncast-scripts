@@ -7,7 +7,7 @@ This repository contains scripts to conveniently start and stop the Owncast serv
 ### Prerequisites
 
 - Owncast server installed on your machine. You can find more information on how to install Owncast [here](https://owncast.online/docs/).
-- A pre-configured Cloudflare Tunnel.
+- A pre-configured Cloudflare Tunnel is required for optimal functionality. Installation instructions can be found [here](https://www.linkedin.com/pulse/cloudflare-tunnel-setup-docker-christian-rune).
 
 ### Installation
 
