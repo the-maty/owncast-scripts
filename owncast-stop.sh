@@ -5,6 +5,7 @@ ORANGE='\033[38;2;255;165;0m'
 CYAN='\033[96m'
 RESET='\033[0m'
 
+clear
 echo -e "${ORANGE}"
 echo -e " ____  _                 ___                               _   ";
 echo -e "/ ___|| |_ ___  _ __    / _ \__      ___ __   ___ __ _ ___| |_ ";
@@ -20,7 +21,6 @@ echo -e "|___/\___|_|  |_| .__/ \__|                                    ";
 echo -e "                |_|                                            ";
 echo -e "${RESET}"
 
-sleep 3
 echo -e "${CYAN}Stopping owncast...${RESET}"
 # Wait 3 sec
 sleep 3

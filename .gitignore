@@ -1,4 +1,4 @@
 # .gitignore
 
-# Ignore .env file
-.env
+# Ignore config.sh file
+config.sh

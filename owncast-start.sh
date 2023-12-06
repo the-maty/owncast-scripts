@@ -8,11 +8,15 @@ CYAN='\033[96m'
 UNDERLINE='\033[4m'
 RESET='\033[0m'
 
-# URL pro Cloudflare
-cloudflare_url="URL-CLOUDFLARE-TUNNEL-HERE"
-
 # CMD check interface--> networksetup -listallhardwareports
 
+# Get script directory for loading config.sh file
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+#Loading config.sh that is located in the same directory as scripts
+source "$SCRIPT_DIR/config.sh" 
+
+clear
 echo -e "${ORANGE}"
 echo -e " ____  _             _      ___                               _   ";
 echo -e "/ ___|| |_ __ _ _ __| |_   / _ \__      ___ __   ___ __ _ ___| |_ ";
@@ -92,7 +96,7 @@ fi
 local_ip=$(ipconfig getifaddr $interface_id)
 
 # Kontrola, zda je lokalni IP adresa spravna    
-if [ "$local_ip" = "YOUR-LOCAL-IP-HERE" ]; then  # <---- Uprava IP adresy ZDE            # KDYZ SPRAVNA IP
+if [ "$local_ip" = "$your_desired_ip" ]; then  # <---- Uprava IP adresy ZDE            # KDYZ SPRAVNA IP
     clear
     echo && echo
     echo -e "${CYAN}Checking Docker status...${RESET}"
@@ -107,8 +111,8 @@ if [ "$local_ip" = "YOUR-LOCAL-IP-HERE" ]; then  # <---- Uprava IP adresy ZDE   
         # Spustit Docker kontejner
         docker container start Cloudflare_Tunnel
 
-        # Prejit do adresaree "/Users/maty/DEV/owncast" a spustit "./owncast" na pozadi
-        cd "/Users/maty/DEV/owncast" && nohup ./owncast > /dev/null 2>&1 &
+        # Prejit do adresaree "$owncast_dir" a spustit "./owncast" na pozadi
+        cd "$owncast_dir" && nohup ./owncast > /dev/null 2>&1 &
         echo
         echo -e "${CYAN}owncast successfully launched in the background.${RESET}"
         echo
@@ -122,8 +126,8 @@ if [ "$local_ip" = "YOUR-LOCAL-IP-HERE" ]; then  # <---- Uprava IP adresy ZDE   
         # Spustit Docker kontejner
         docker container start Cloudflare_Tunnel
 
-        # Prejit do adresare "/Users/maty/DEV/owncast" a spustit "./owncast" na pozadi
-        cd "/Users/maty/DEV/owncast" && nohup ./owncast > /dev/null 2>&1 &
+        # Prejit do adresare "$owncast_dir" a spustit "./owncast" na pozadi
+        cd "$owncast_dir" && nohup ./owncast > /dev/null 2>&1 &
         echo 
         echo -e "${CYAN}owncast successfully launched in the background.${RESET}"
 
