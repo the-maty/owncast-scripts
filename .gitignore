@@ -2,3 +2,4 @@
 
 # Ignore config.sh file
 config.sh
+.DS_Store
