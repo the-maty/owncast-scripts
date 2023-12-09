@@ -17,7 +17,7 @@ This repository contains scripts to conveniently start and stop the Owncast serv
    git clone https://github.com/the-maty/owncast-server-scripts.git
    ```
 
-2. Check file, provide your URL and IPv4 adress of your machine.
+2. Create your config.sh file from example.config.sh .
 
 ## Usage
 
