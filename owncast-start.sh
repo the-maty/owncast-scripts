@@ -148,6 +148,7 @@ exit
 else                                                                                # KDYZ SPATNA IP
     echo
     echo -e "${RED}Error: It is necessary to change the IPv4 address to${RESET} ${UNDERLINE}$local_ip${RESET}"
+    echo -e "${RED}If you are changing on CF dashboard, change it in your config.sh too.${RESET}"
     
     echo
     echo -e "${CYAN}Openning Cloudflare One dashboard...${RESET}"
