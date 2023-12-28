@@ -36,8 +36,8 @@ get_connection_info()
 {
   echo
   echo -e "${PURPLE}Choose the connection type:${RESET}"
-  echo -e "  ${PURPLE}1) Wi-Fi${RESET}"
-  echo -e "  ${PURPLE}2) Ethernet${RESET}"
+  echo -e "${PURPLE}  1) Wi-Fi${RESET}"
+  echo -e "${PURPLE}  2) Ethernet${RESET}"
   echo -n -e "${PURPLE}Choose an option (1 / 2): ${RESET}"
   read choice
 
