@@ -8,6 +8,7 @@ This repository contains scripts to conveniently start and stop the Owncast serv
 
 - Owncast server installed on your machine. You can find more information on how to install Owncast [here](https://owncast.online/docs/).
 - A pre-configured Cloudflare Tunnel is required for optimal functionality. Installation instructions can be found [here](https://www.linkedin.com/pulse/cloudflare-tunnel-setup-docker-christian-rune).
+- If you want to have shortcuts on your desktop with a nice icon, [here](https://www.iconfinder.com/icons/103344/stop_server_icon) and [here](https://www.iconfinder.com/icons/103341/run_server_icon) are the icons that I use.
 
 ### Installation
 
