@@ -1,8 +1,5 @@
 # Rename to config.sh
 # chmod 600 config.sh
-# URLs for nice icons I use:
-# --> https://www.iconfinder.com/icons/103341/run_server_icon
-# --> https://www.iconfinder.com/icons/103344/stop_server_icon
 
 export cloudflare_url="CLOUDFLARE-ONE-URL-HERE";     # Cloudflare One Dashboard URL to get you there
 export your_desired_ip="YOUR-LOCAL-IP-HERE";         # Local IP that you want to use for access over Cloudflare Tunnel
