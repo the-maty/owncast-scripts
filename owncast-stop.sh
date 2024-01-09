@@ -41,17 +41,16 @@ pkill -9 -f Docker
 sleep 3
 
 # Discord Trakt Presence detection turn off
-pkill -f disakt.py
+pkill -f DiscTrakt.py
 sleep 1
 
-if pgrep -f disakt.py > /dev/null; then
-    echo -e "${RED}Failed to terminate disakt.py.${RESET}"
+if pgrep -f DiscTrakt.py > /dev/null; then
+    echo -e "${RED}Failed to terminate DiscTrakt.py.${RESET}"
 else
-    echo -e "${CYAN}disakt.py terminated successfully.${RESET}"
+    echo
+    echo -e "${ORANGE}-------------------------- DONE --------------------------${RESET}"
 fi
 
-echo
-echo -e "${ORANGE}-------------------------- DONE --------------------------${RESET}"
 sleep 5
 # Exit the terminal
 exit

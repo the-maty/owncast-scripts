@@ -143,7 +143,7 @@ if [ "$local_ip" = "$your_desired_ip" ]; then  # <---- Uprava IP adresy ZDE     
             echo -e "${ORANGE}The Trakt script is already running.${RESET}"
         else
             echo -e "${CYAN}Starting Trakt Discord Presence detection...${RESET}"
-            nohup python3 /Users/maty/DEV/TraktDiscordRP/disakt.py > /dev/null 2>&1 &
+            nohup python3 /Users/maty/DEV/TraktDiscordRP/DiscTrakt.py > /dev/null 2>&1 &
         fi
     else
         echo -e "${CYAN}Skipping discord presence Trakt function${RESET}"
