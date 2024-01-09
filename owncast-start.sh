@@ -140,14 +140,14 @@ if [ "$local_ip" = "$your_desired_ip" ]; then  # <---- Uprava IP adresy ZDE     
     if [ "$Trakt_DcRP" = "true" ]; then
 
         if pgrep -f "$Trakt_DcRP" > /dev/null; then
-            echo "The script is already running."
+            echo -e "${ORANGE}The Trakt script is already running.${RESET}"
         else
-            echo -e "${ORANGE}Starting Trakt Discord Presence detection...${RESET}"
+            echo -e "${CYAN}Starting Trakt Discord Presence detection...${RESET}"
             nohup python3 /Users/maty/DEV/TraktDiscordRP/disakt.py > /dev/null 2>&1 &
         fi
     else
-        echo -e "${ORANGE}Skipping discord presence Trakt function${RESET}"
-        echo -e "${ORANGE}not configured in config.sh...${RESET}"
+        echo -e "${CYAN}Skipping discord presence Trakt function${RESET}"
+        echo -e "${CYAN}not configured in config.sh...${RESET}"
     fi
 fi
 
