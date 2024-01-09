@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # ANSI color codes  // light colors
+RED='\033[91m'
 ORANGE='\033[38;2;255;165;0m'
 CYAN='\033[96m'
 RESET='\033[0m'
@@ -36,6 +37,18 @@ sleep 3
 
 # Forcefully terminate Docker processes
 pkill -9 -f Docker
+
+sleep 3
+
+# Discord Trakt Presence detection turn off
+pkill -f disakt.py
+sleep 1
+
+if pgrep -f disakt.py > /dev/null; then
+    echo -e "${RED}Failed to terminate disakt.py.${RESET}"
+else
+    echo -e "${CYAN}disakt.py terminated successfully.${RESET}"
+fi
 
 echo
 echo -e "${ORANGE}-------------------------- DONE --------------------------${RESET}"

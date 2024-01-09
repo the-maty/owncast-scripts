@@ -135,6 +135,16 @@ if [ "$local_ip" = "$your_desired_ip" ]; then  # <---- Uprava IP adresy ZDE     
     echo
     echo -e "${CYAN}Openning OBS...${RESET}"
     open -a OBS
+
+    # Start Trakt Discord Presence python script
+    if [ "$Trakt_Dc_RP" = "true" ]; then
+        # Perform actions or functions related to the enabled feature
+        nohup python3 /Users/maty/DEV/TraktDiscordRP/disakt.py > /dev/null 2>&1 &
+        echo -e "${ORANGE}Trakt Discord Presence successfuly loaded${RESET}"
+    else
+        echo -e "${ORANGE}Skipping discord presence Trakt function${RESET}"
+        echo -e "${ORANGE}not configured in config.sh...${RESET}"
+    fi
 fi
 
 # Konec pri spravnem provedeni skriptu
