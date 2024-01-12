@@ -8,7 +8,7 @@ CYAN='\033[96m'
 UNDERLINE='\033[4m'
 RESET='\033[0m'
 
-# CMD check interface--> networksetup -listallhardwareports
+# Check interface --> networksetup -listallhardwareports
 
 # Get script directory for loading config.sh file
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
