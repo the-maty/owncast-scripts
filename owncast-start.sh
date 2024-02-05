@@ -154,7 +154,7 @@ fi
 # Konec pri spravnem provedeni skriptu
 echo
 echo -e "${ORANGE}-------------------------- DONE --------------------------${RESET}"
-sleep 5
+sleep 2
 
 # Ukonceni terminalu
 exit

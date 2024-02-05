@@ -23,8 +23,7 @@ echo -e "                |_|                                            ";
 echo -e "${RESET}"
 
 echo -e "${CYAN}Stopping owncast...${RESET}"
-# Wait 3 sec
-sleep 3
+
 # Force terminate OwnCast
 pkill -9 -f owncast
 
@@ -38,7 +37,7 @@ sleep 3
 # Forcefully terminate Docker processes
 pkill -9 -f Docker
 
-sleep 3
+sleep 2
 
 # Discord Trakt Presence detection turn off
 pkill -f DiscTrakt.py
@@ -51,6 +50,6 @@ else
     echo -e "${ORANGE}-------------------------- DONE --------------------------${RESET}"
 fi
 
-sleep 5
+sleep 2
 # Exit the terminal
 exit
