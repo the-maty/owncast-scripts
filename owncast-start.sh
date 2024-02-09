@@ -124,7 +124,6 @@ if [ "$local_ip" = "$your_desired_ip" ]; then  # <---- Uprava IP adresy ZDE     
         echo -e "${CYAN}Skipping discord presence Trakt function${RESET}"
         echo -e "${CYAN}not configured in config.sh...${RESET}"
     fi
-fi
 
 # Konec pri spravnem provedeni skriptu
 echo
