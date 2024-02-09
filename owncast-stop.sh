@@ -36,7 +36,6 @@ pkill -9 -f owncast
 #else
     echo
     echo -e "${ORANGE}-------------------------- DONE --------------------------${RESET}"
-fi
 
 sleep 2
 # Exit the terminal
