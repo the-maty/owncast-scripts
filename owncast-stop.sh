@@ -27,25 +27,13 @@ echo -e "${CYAN}Stopping owncast...${RESET}"
 # Force terminate OwnCast
 pkill -9 -f owncast
 
-echo
-echo -e "${CYAN}Stopping Cloudflare Tunnel and exiting Docker...${RESET}"
-
-# Stop Docker container named Cloudflare_Tunnel
-docker container stop Cloudflare_Tunnel
-sleep 3
-
-# Forcefully terminate Docker processes
-pkill -9 -f Docker
-
-sleep 2
-
 # Discord Trakt Presence detection turn off
-pkill -f DiscTrakt.py
-sleep 1
+# pkill -f DiscTrakt.py
+# sleep 1
 
-if pgrep -f DiscTrakt.py > /dev/null; then
-    echo -e "${RED}Failed to terminate DiscTrakt.py.${RESET}"
-else
+# if pgrep -f DiscTrakt.py > /dev/null; then
+#     echo -e "${RED}Failed to terminate DiscTrakt.py.${RESET}"
+#else
     echo
     echo -e "${ORANGE}-------------------------- DONE --------------------------${RESET}"
 fi

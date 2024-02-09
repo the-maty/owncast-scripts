@@ -98,38 +98,13 @@ local_ip=$(ipconfig getifaddr $interface_id)
 # Kontrola, zda je lokalni IP adresa spravna    
 if [ "$local_ip" = "$your_desired_ip" ]; then  # <---- Uprava IP adresy ZDE            # KDYZ SPRAVNA IP
     clear
-    echo && echo
-    echo -e "${CYAN}Checking Docker status...${RESET}"
     echo
 
-    # Kontrola, zda bezi Docker
-    if docker info &> /dev/null; then
-        echo -e "${ORANGE}Docker is already open, starting Cloudflare Tunnel...${RESET}"
-        echo
-        sleep 3
-
-        # Spustit Docker kontejner
-        docker container start Cloudflare_Tunnel
-
-        # Prejit do adresaree "$owncast_dir" a spustit "./owncast" na pozadi
-        cd "$owncast_dir" && nohup ./owncast > /dev/null 2>&1 &
-        echo
-        echo -e "${CYAN}owncast successfully launched in the background.${RESET}"
-        echo
-    else
-        echo -e "${CYAN}Starting Docker and Cloudflare Tunnel...${RESET}"
-
-        # Otevrit Docker cekat 5 sec po otevreni
-        open -a Docker
-        sleep 5
-    
-        # Spustit Docker kontejner
-        docker container start Cloudflare_Tunnel
-
-        # Prejit do adresare "$owncast_dir" a spustit "./owncast" na pozadi
-        cd "$owncast_dir" && nohup ./owncast > /dev/null 2>&1 &
-        echo 
-        echo -e "${CYAN}owncast successfully launched in the background.${RESET}"
+    # Prejit do adresaree "$owncast_dir" a spustit "./owncast" na pozadi
+    cd "$owncast_dir" && nohup ./owncast > /dev/null 2>&1 &
+    echo
+    echo -e "${CYAN}owncast successfully launched in the background.${RESET}"
+    echo
 
     # Na konci spusteni OBS
     echo
@@ -165,7 +140,7 @@ else                                                                            
     echo -e "${RED}If you are changing on CF dashboard, change it in your config.sh too.${RESET}"
     
     echo
-    echo -e "${CYAN}Openning Cloudflare One dashboard...${RESET}"
+    echo -e "${CYAN}Openning dashboard...${RESET}"
     sleep 3
     
     # Pouziti open na macOS / xdg-open na Linuxu
