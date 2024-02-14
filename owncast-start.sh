@@ -116,6 +116,11 @@ if [ "$local_ip" = "$your_desired_ip" ]; then  # <---- Uprava IP adresy ZDE     
 
         if pgrep -f DiscTrakt > /dev/null; then
             echo -e "${ORANGE}The Trakt script is already running.${RESET}"
+            echo
+            echo -e "${CYAN}Restarting Trakt Discord Presence detection...${RESET}"
+            pkill -f DiscTrakt
+            sleep 2
+            nohup python3 /Users/maty/DEV/TraktDiscordRP/DiscTrakt > /dev/null 2>&1 &
         else
             echo -e "${CYAN}Starting Trakt Discord Presence detection...${RESET}"
             nohup python3 /Users/maty/DEV/TraktDiscordRP/DiscTrakt > /dev/null 2>&1 &

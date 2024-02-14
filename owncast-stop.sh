@@ -28,11 +28,11 @@ echo -e "${CYAN}Stopping owncast...${RESET}"
 pkill -9 -f owncast
 
 # Discord Trakt Presence detection turn off
-# pkill -f DiscTrakt.py
+# pkill -f DiscTrakt
 # sleep 1
 
-# if pgrep -f DiscTrakt.py > /dev/null; then
-#     echo -e "${RED}Failed to terminate DiscTrakt.py.${RESET}"
+# if pgrep -f DiscTrakt > /dev/null; then
+#     echo -e "${RED}Failed to terminate DiscTrakt.${RESET}"
 #else
     echo
     echo -e "${ORANGE}-------------------------- DONE --------------------------${RESET}"
