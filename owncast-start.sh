@@ -102,6 +102,20 @@ if [ "$local_ip" = "$your_desired_ip" ]; then  # <---- Uprava IP adresy ZDE     
 
     # Prejit do adresaree "$owncast_dir" a spustit "./owncast" na pozadi
     cd "$owncast_dir" && nohup ./owncast > /dev/null 2>&1 &
+
+    if [ "$RemoteAccess" = "true" ]; then
+
+      # Commands to be executed on the remote machine
+      command_to_execute="sudo tailscale up"
+
+      # SSH connection and command execution
+      ssh -i "$ssh_key_path" "$remote_user@$remote_host" "$command_to_execute"
+
+    else
+        echo -e "${CYAN}Skipping remote access function${RESET}"
+        echo -e "${CYAN}not configured in config.sh...${RESET}"
+    fi
+    
     echo
     echo -e "${CYAN}owncast successfully launched in the background.${RESET}"
     echo

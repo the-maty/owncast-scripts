@@ -27,6 +27,19 @@ echo -e "${CYAN}Stopping owncast...${RESET}"
 # Force terminate OwnCast
 pkill -9 -f owncast
 
+if [ "$RemoteAccess" = "true" ]; then
+
+    # Commands to be executed on the remote machine
+    command_to_execute="sudo tailscale down"
+
+    # SSH connection and command execution
+    ssh -i "$ssh_key_path" "$remote_user@$remote_host" "$command_to_execute"
+
+else
+    echo -e "${CYAN}Skipping remote access function${RESET}"
+    echo -e "${CYAN}not configured in config.sh...${RESET}"
+fi
+
 # Discord Trakt Presence detection turn off
 # pkill -f DiscTrakt
 # sleep 1
