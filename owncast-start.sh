@@ -163,13 +163,13 @@ else                                                                            
     
     # Pouziti open na macOS / xdg-open na Linuxu
     if command -v open &> /dev/null; then
-        open "$cloudflare_url"
+        open "$providerURL"
     elif command -v xdg-open &> /dev/null; then     # Upravena kompatibilita
-        xdg-open "$cloudflare_url"
+        xdg-open "$providerURL"
     else
         echo
         echo -e "${RED}Error: Unable to open the URL. Please open it manually in your web browser.${RESET}"
-        echo -e "${ORANGE}$cloudflare_url${RESET}"
+        echo -e "${ORANGE}$providerURL${RESET}"
     fi
 
     # Ukonceni terminalu s chybou
