@@ -18,11 +18,11 @@ source "$SCRIPT_DIR/config.sh"
 
 clear
 echo -e "${ORANGE}"
-echo -e " ____  _             _      ___                               _   ";
-echo -e "/ ___|| |_ __ _ _ __| |_   / _ \__      ___ __   ___ __ _ ___| |_ ";
-echo -e "\___ \| __/ _' | '__| __| | | | \ \ /\ / / '_ \ / __/ _' / __| __|";
-echo -e " ___) | || (_| | |  | |_  | |_| |\ V  V /| | | | (_| (_| \__ \ |_ ";
-echo -e "|____/ \__\__,_|_|   \__|  \___/  \_/\_/ |_| |_|\___\__,_|___/\__|";
+echo -e "  ___                               _   ";
+echo -e " / _ \__      ___ __   ___ __ _ ___| |_ ";
+echo -e "| | | \ \ /\ / / '_ \ / __/ _' / __| __|";
+echo -e "| |_| |\ V  V /| | | | (_| (_| \__ \ |_ ";
+echo -e " \___/  \_/\_/ |_| |_|\___\__,_|___/\__|";
 echo -e "               _       _                                          ";
 echo -e " ___  ___ _ __(_)_ __ | |_                                        ";
 echo -e "/ __|/ __| '__| | '_ \| __|                                       ";
@@ -30,6 +30,26 @@ echo -e "\__ \ (__| |  | | |_) | |_                                        ";
 echo -e "|___/\___|_|  |_| .__/ \__|                                       ";
 echo -e "                |_|                                               ";
 echo -e "${RESET}"
+
+# Check if Owncast is running
+if pgrep -f owncast > /dev/null; then
+    echo -e "${RED}Owncast is already running.${RESET}"
+    echo -n -e "${PURPLE}Do you want to stop the server? (y/n) ${RESET}"
+    read stop_server
+
+    if [ "$stop_server" = "y" ]; then
+        echo -e "${CYAN}Stopping Owncast...${RESET}"
+        pkill -9 -f owncast
+        echo
+        echo -e "${ORANGE}-------------------------- DONE --------------------------${RESET}"
+        sleep 2
+        exit
+    else
+        echo -e "${CYAN}Terminating script...${RESET}"
+        sleep 2
+        exit 1
+    fi
+fi
 
 # Funkce pro ziskani informaci o pripojeni
 get_connection_info()
