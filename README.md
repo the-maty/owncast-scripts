@@ -28,8 +28,8 @@ To start the Owncast server including Cloudflare Tunnel, use the following comma
 
 ```bash
 chmod 600 config.sh
-chmod +x owncast-start.sh
-./owncast-start.sh
+chmod +x owncast-script.sh
+./owncast-script.sh
 ```
 ### Stopping Owncast Server
 
