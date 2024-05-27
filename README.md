@@ -28,8 +28,6 @@ This script is designed to manage and configure an Owncast server, which is a se
 
 In summary, this script is used to manage an Owncast server, ensuring that it is properly configured with the correct IP address and network interface, and that it is not already running before starting it. It also provides options to stop a running Owncast server and to change the IP address in a remote VPS configuration.
 
-## Getting Started
-
 ### Prerequisites
 
 - Owncast server installed on your machine. You can find more information on how to install Owncast [here](https://owncast.online/docs/).
