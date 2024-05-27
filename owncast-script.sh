@@ -40,6 +40,11 @@ if pgrep -f owncast > /dev/null; then
     if [ "$stop_server" = "y" ]; then
         echo -e "${CYAN}Stopping Owncast...${RESET}"
         pkill -9 -f owncast
+
+        # PRIDAT ZMENY FILU NA SERVERU ABY NEBYLO PUBLIC IP         ##############################################
+        #
+        #
+        #
         echo
         echo -e "${ORANGE}-------------------------- DONE --------------------------${RESET}"
         sleep 2
