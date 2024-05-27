@@ -115,26 +115,18 @@ fi
 # Ziskani aktualni lokalni IP adresy na macOS
 local_ip=$(ipconfig getifaddr $interface_id)
 
-# Kontrola, zda je lokalni IP adresa spravna    
-if [ "$local_ip" = "$your_desired_ip" ]; then  # <---- Uprava IP adresy ZDE            # KDYZ SPRAVNA IP
+# Kontrola zda ip local_ip stejna jako v configu VPS
+line_on_server=$(ssh $SSH_user@$SSH_host "sed '$line_number!d' $SSH_ip_path")
+
+# Extrakce IP adresy
+ip_on_server=$(echo $line_on_server | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b")
+
+if [ "$local_ip" == "$ip_on_server" ]; then  #               # KDYZ SPRAVNA IP
     clear
     echo
 
     # Prejit do adresaree "$owncast_dir" a spustit "./owncast" na pozadi
     cd "$owncast_dir" && nohup ./owncast > /dev/null 2>&1 &
-
-    # if [ "$RemoteAccess" = "true" ]; then
-
-    #   # Commands to be executed on the remote machine
-    #   command_to_execute="sudo tailscale up"
-
-    #   # SSH connection and command execution
-    #   ssh -i "$ssh_key_path" "$remote_user@$remote_host" "$command_to_execute"
-
-    # else
-    #     echo -e "${CYAN}Skipping remote access function${RESET}"
-    #     echo -e "${CYAN}not configured in config.sh...${RESET}"
-    # fi
     
     echo
     echo -e "${CYAN}owncast successfully launched in the background.${RESET}"
@@ -175,7 +167,7 @@ exit
 else                                                                                # KDYZ SPATNA IP
     echo
     echo -e "${RED}Error: It is necessary to change the IPv4 address to${RESET} ${UNDERLINE}$local_ip${RESET}"
-    echo -e "${RED}If you are changing on CF dashboard, change it in your config.sh too.${RESET}"
+    echo -e "${RED}If you are changing on Traefik dashboard, change it in your config too.${RESET}"
     
     echo
     echo -e "${CYAN}Openning dashboard...${RESET}"
