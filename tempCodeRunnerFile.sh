@@ -115,93 +115,87 @@ fi
 # Ziskani aktualni lokalni IP adresy na macOS
 local_ip=$(ipconfig getifaddr $interface_id)
 
-function launch_owncast() {
+# Kontrola zda ip local_ip stejna jako v configu VPS
+line_on_server=$(ssh $SSH_user@$SSH_host "sed '$line_number!d' $SSH_ip_path")
 
-  # Kontrola zda ip local_ip stejna jako v configu VPS
-  line_on_server=$(ssh $SSH_user@$SSH_host "sed '$line_number!d' $SSH_ip_path")
+# Extrakce IP adresy
+ip_on_server=$(echo $line_on_server | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b")
 
-  # Extrakce IP adresy
-  ip_on_server=$(echo $line_on_server | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b")
+if [ "$local_ip" == "$ip_on_server" ]; then  #               # KDYZ SPRAVNA IP
+    clear
+    echo
 
-    if [ "$local_ip" == "$ip_on_server" ]; then
-        clear
-        echo
+    # Prejit do adresaree "$owncast_dir" a spustit "./owncast" na pozadi
+    cd "$owncast_dir" && nohup ./owncast > /dev/null 2>&1 &
+    
+    echo
+    echo -e "${CYAN}owncast successfully launched in the background.${RESET}"
+    echo
 
-        # Prejit do adresaree "$owncast_dir" a spustit "./owncast" na pozadi
-        cd "$owncast_dir" && nohup ./owncast > /dev/null 2>&1 &
-        
-        echo
-        echo -e "${CYAN}owncast successfully launched in the background.${RESET}"
-        echo
+    # Na konci spusteni OBS
+    echo
+    echo -e "${CYAN}Openning OBS...${RESET}"
+    open -a OBS
 
-        # Na konci spusteni OBS
-        echo
-        echo -e "${CYAN}Openning OBS...${RESET}"
-        open -a OBS
+    # Start Trakt Discord Presence python script
+    if [ "$Trakt_DcRP" = "true" ]; then
 
-        # Start Trakt Discord Presence python script
-        if [ "$Trakt_DcRP" = "true" ]; then
-
-            if pgrep -f DiscTrakt > /dev/null; then
-                echo -e "${ORANGE}The Trakt script is already running.${RESET}"
-                echo
-                echo -e "${CYAN}Restarting Trakt Discord Presence detection...${RESET}"
-                pkill -f DiscTrakt
-                sleep 2
-                nohup python3 /Users/maty/DEV/TraktDiscordRP/DiscTrakt > /dev/null 2>&1 &
-            else
-                echo -e "${CYAN}Starting Trakt Discord Presence detection...${RESET}"
-                nohup python3 /Users/maty/DEV/TraktDiscordRP/DiscTrakt > /dev/null 2>&1 &
-            fi
+        if pgrep -f DiscTrakt > /dev/null; then
+            echo -e "${ORANGE}The Trakt script is already running.${RESET}"
+            echo
+            echo -e "${CYAN}Restarting Trakt Discord Presence detection...${RESET}"
+            pkill -f DiscTrakt
+            sleep 2
+            nohup python3 /Users/maty/DEV/TraktDiscordRP/DiscTrakt > /dev/null 2>&1 &
         else
-            echo -e "${CYAN}Skipping discord presence Trakt function${RESET}"
-            echo -e "${CYAN}not configured in config.sh...${RESET}"
+            echo -e "${CYAN}Starting Trakt Discord Presence detection...${RESET}"
+            nohup python3 /Users/maty/DEV/TraktDiscordRP/DiscTrakt > /dev/null 2>&1 &
         fi
-
-        # Konec pri spravnem provedeni skriptu
-        echo
-        echo -e "${ORANGE}-------------------------- DONE --------------------------${RESET}"
-        sleep 2
-
-        # Ukonceni terminalu
-        exit
-    else 
-        echo -e "${RED}Error: It is necessary the IPv4 address to be changed to${RESET} ${UNDERLINE}$local_ip${RESET}"    
-
-        # Otazka jestli chceme pokracovat
-        echo -ne "${PURPLE}Do you want to proceed? (y/n) ${RESET}"
-        read proceed
-
-        if [[ "$proceed" == "y" || "$proceed" == "Y" ]]; then
-        
-            # Remote edit IP address on VPS
-            ssh $SSH_user@$SSH_host "sed -i '${line_number}s/${ip_on_server}/${local_ip}/' $SSH_ip_path"
-
-            echo -e "${CYAN}${local_ip} successfully inserted inside ${SSH_ip_path} on line ${line_number}.${RESET}"
-            echo -e "${CYAN}Reruning script in 5 sec...${RESET}"
-            sleep 5
-            # Rerun script after change of IP on VPS
-            launch_owncast
-        else
-            echo -e "${RED}Error: Script was terminated...${RESET}"
-
-            # Terminate terminal with error
-            # Clean up when there is an error 
-            cleanup()
-            {
-                echo && echo
-                printf "Press Enter to close the terminal..."
-                read -r dummy
-            }
-
-            # Trap calls clean up and terminates script
-            trap cleanup EXIT
-
-            # Exit terminal on error
-            exit 1
-        fi
+    else
+        echo -e "${CYAN}Skipping discord presence Trakt function${RESET}"
+        echo -e "${CYAN}not configured in config.sh...${RESET}"
     fi
-}
 
-# Asi neni uplne v poho, ale it works like that
-launch_owncast
+# Konec pri spravnem provedeni skriptu
+echo
+echo -e "${ORANGE}-------------------------- DONE --------------------------${RESET}"
+sleep 2
+
+# Ukonceni terminalu
+exit
+        # KDYZ SPATNA IP
+
+echo -e "${RED}Error: It is necessary the IPv4 address to be changed to${RESET} ${UNDERLINE}$local_ip${RESET}"
+# Ask the user if they want to proceed
+echo -e "${CYAN}Do you want to proceed? (y/n) ${RESET}"
+read proceed
+
+if [[ "$proceed" == "y" || "$proceed" == "Y" ]]; then
+    
+    # Remote edit IP address on VPS
+    ssh $SSH_user@$SSH_host "sed -i '${line_number}s/${ip_on_server}/${local_ip}/' $SSH_ip_path"
+
+    echo -e "${CYAN}${local_ip} successfully inserted inside ${SSH_ip_path} on line ${line_number}.${RESET}"
+    sleep 3
+
+    # Open OBS
+    echo -e "${CYAN}Opening OBS...${RESET}"
+    open -a OBS
+
+else
+    echo -e "${RED}Error: check your config.sh file if its configured correctly...${RESET}"
+    # Terminate terminal with error
+    # Clean up when there is an error 
+    cleanup()
+    {
+      echo && echo
+      printf "Press Enter to close the terminal..."
+      read -r dummy
+    }
+
+    # Trap calls clean up and terminates script
+    trap cleanup EXIT
+
+    # Exit terminal on error
+    exit 1
+fi
