@@ -3,8 +3,7 @@
 This repository contains scripts to conveniently start and stop the Owncast server on macOS and Linux platforms.
 
 ## What does it do?
-
-This script is designed to manage and configure an Owncast server, which is a self-hosted live video and web chat server for use with existing popular broadcasting software. Here's a summary of what the script does:
+script is used to manage an Owncast server, ensuring that it is properly configured with the correct IP address and network interface, and that it is not already running before starting it. It also provides options to stop a running Owncast server and to change the IP address in a remote VPS configuration.
 
 1. It starts by defining some ANSI color codes for console output.
 
@@ -25,8 +24,6 @@ This script is designed to manage and configure an Owncast server, which is a se
    - If the local IP address does not match the IP address in the VPS configuration, it asks the user if they want to proceed. If the user chooses to proceed, it changes the IP address in the VPS configuration to the local IP address, and then reruns the `launch_owncast` function. If the user chooses not to proceed, it prints an error message and exits.
 
 8. Finally, the script calls the `launch_owncast` function to start the Owncast server.
-
-In summary, this script is used to manage an Owncast server, ensuring that it is properly configured with the correct IP address and network interface, and that it is not already running before starting it. It also provides options to stop a running Owncast server and to change the IP address in a remote VPS configuration.
 
 ### Prerequisites
 
