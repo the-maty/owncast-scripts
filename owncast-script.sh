@@ -31,9 +31,19 @@ echo -e "|___/\___|_|  |_| .__/ \__|                                       ";
 echo -e "                |_|                                               ";
 echo -e "${RESET}"
 
+function ssh_ip_extraction()
+{
+    # Kontrola zda ip local_ip stejna jako v configu VPS
+    line_on_server=$(ssh $SSH_user@$SSH_host "sed '$line_number!d' $SSH_ip_path")
+
+    # Extrakce IP adresy
+    ip_on_server=$(echo $line_on_server | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b")
+}
+
 # Check if Owncast is running
 if pgrep -f owncast > /dev/null; then
     echo -e "${RED}Owncast is already running.${RESET}"
+    echo
     echo -n -e "${PURPLE}Do you want to stop the server? (y/n) ${RESET}"
     read stop_server
 
@@ -41,10 +51,16 @@ if pgrep -f owncast > /dev/null; then
         echo -e "${CYAN}Stopping Owncast...${RESET}"
         pkill -9 -f owncast
 
-        # PRIDAT ZMENY FILU NA SERVERU ABY NEBYLO PUBLIC IP         ##############################################
+        ssh_ip_extraction # Volani extrakce IP ze souboru na VPS
+
+        test_ip="192.168.69.69"
+        ssh $SSH_user@$SSH_host "sed -i '${line_number}s/${ip_on_server}/${test_ip}/' $SSH_ip_path"
         #
-        #
-        #
+        ssh_ip_extraction # Volame znova po zmene na serveru
+
+        echo -e "${CYAN}Traefik IP has been changed to ${RESET}${UNDERLINE}$ip_on_server${RESET}"
+        echo
+        echo -e "${CYAN}Local IP is not exposed to VPS anymore${RESET}"
         echo
         echo -e "${ORANGE}-------------------------- DONE --------------------------${RESET}"
         sleep 2
@@ -117,16 +133,12 @@ else
   sleep 3
 fi
 
-# Ziskani aktualni lokalni IP adresy na macOS
+# Lokalni ip adresa
 local_ip=$(ipconfig getifaddr $interface_id)
 
 function launch_owncast() {
 
-  # Kontrola zda ip local_ip stejna jako v configu VPS
-  line_on_server=$(ssh $SSH_user@$SSH_host "sed '$line_number!d' $SSH_ip_path")
-
-  # Extrakce IP adresy
-  ip_on_server=$(echo $line_on_server | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b")
+  ssh_ip_extraction
 
     if [ "$local_ip" == "$ip_on_server" ]; then
         clear
@@ -171,7 +183,9 @@ function launch_owncast() {
         # Ukonceni terminalu
         exit
     else 
-        echo -e "${RED}Error: It is necessary the IPv4 address to be changed to${RESET} ${UNDERLINE}$local_ip${RESET}"    
+        echo -e "${RED}Error: Traefik IP is now ${RESET}${UNDERLINE}$ip_on_server${RESET}"
+        echo -e "${RED}Error: It is necessary the IPv4 address to be changed to${RESET} ${UNDERLINE}$local_ip${RESET}"
+        echo
 
         # Otazka jestli chceme pokracovat
         echo -ne "${PURPLE}Do you want to proceed? (y/n) ${RESET}"
@@ -182,6 +196,7 @@ function launch_owncast() {
             # Remote edit IP address on VPS
             ssh $SSH_user@$SSH_host "sed -i '${line_number}s/${ip_on_server}/${local_ip}/' $SSH_ip_path"
 
+            echo
             echo -e "${CYAN}${local_ip} successfully inserted inside ${SSH_ip_path} on line ${line_number}.${RESET}"
             echo -e "${CYAN}Reruning script in 5 sec...${RESET}"
             sleep 5
