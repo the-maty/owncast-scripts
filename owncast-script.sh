@@ -47,6 +47,7 @@ function reboot_traefik() {
 
     ssh $ssh_user@$ssh_host "docker restart traefik"
     echo "Traefik container has been restarted."
+    sleep 1
 }
 
 # Function to add the comment symbol (#) to the beginning of the specified line if it does not exist
