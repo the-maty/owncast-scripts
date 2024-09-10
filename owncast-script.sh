@@ -34,10 +34,69 @@ echo -e "${RESET}"
 function ssh_ip_extraction()
 {
     # Kontrola zda ip local_ip stejna jako v configu VPS
-    line_on_server=$(ssh $SSH_user@$SSH_host "sed '$line_number!d' $SSH_ip_path")
+    line_on_server=$(ssh $SSH_user@$SSH_host "sed '$line_number_ip!d' $SSH_ip_path")
 
     # Extrakce IP adresy
     ip_on_server=$(echo $line_on_server | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b")
+}
+
+# Function to restart the Traefik container
+function reboot_traefik() {
+    local ssh_user=$1
+    local ssh_host=$2
+
+    ssh $ssh_user@$ssh_host "docker restart traefik"
+    echo "Traefik container has been restarted."
+}
+
+# Function to add the comment symbol (#) to the beginning of the specified line if it does not exist
+function add_comment_symbol() {
+    local line_number_symbol=$1
+    local ssh_user=$2
+    local ssh_host=$3
+    local ssh_ip_path=$4
+
+    line_content=$(ssh $ssh_user@$ssh_host "sed -n '${line_number_symbol}p' $ssh_ip_path")
+
+    if echo "$line_content" | grep -Fq 'block-all'; then
+        if ! echo "$line_content" | grep -q '^#'; then
+            # Add the comment symbol (#) to the beginning of the specified line
+            ssh $ssh_user@$ssh_host "sed -i '${line_number_symbol}s/^/#/' $ssh_ip_path"
+            echo "The comment symbol (#) has been added to the beginning of line $line_number_symbol because it contains 'block-all'."
+        else
+            echo "The line already starts with a comment symbol (#). No changes made."
+        fi
+    elif echo "$line_content" | grep -Fq 'middlewares:'; then
+        if ! echo "$line_content" | grep -q '^#'; then
+            # Add the comment symbol (#) to the beginning of the specified line
+            ssh $ssh_user@$ssh_host "sed -i '${line_number_symbol}s/^/#/' $ssh_ip_path"
+            echo "The comment symbol (#) has been added to the beginning of line $line_number_symbol because it contains 'middlewares:'."
+        else
+            echo "The line already starts with a comment symbol (#). No changes made."
+        fi
+    else
+        echo "The line does not contain 'block-all' or 'middlewares:'. No changes made."
+    fi
+}
+
+# Function to remove the comment symbol (#) from the beginning of a specified line
+function remove_comment_symbol() {
+    local line_number_symbol=$1
+    local ssh_user=$2
+    local ssh_host=$3
+    local ssh_ip_path=$4
+
+    # Fetch the specified line
+    line_content=$(ssh $ssh_user@$ssh_host "sed -n '${line_number_symbol}p' $ssh_ip_path")
+
+    # Check if the line starts with a comment symbol (#) or contains "middlewares:"
+    if [[ $line_content == \#* ]] || [[ $line_content == *"middlewares:"* ]]; then
+        # Remove the comment symbol (#) from the beginning of the line
+        ssh $ssh_user@$ssh_host "sed -i '${line_number_symbol}s/^#//' $ssh_ip_path"
+        echo "The comment symbol (#) has been removed from line $line_number_symbol."
+    else
+        echo "The line $line_number_symbol is not commented and does not contain 'middlewares:'. No changes made."
+    fi
 }
 
 # Check if Owncast is running
@@ -51,20 +110,18 @@ if pgrep -f owncast > /dev/null; then
         echo -e "${CYAN}Stopping Owncast...${RESET}"
         pkill -9 -f owncast
 
-        ssh_ip_extraction # Volani extrakce IP ze souboru na VPS
-
-        test_ip="192.168.69.69"
-        ssh $SSH_user@$SSH_host "sed -i '${line_number}s/${ip_on_server}/${test_ip}/' $SSH_ip_path"
-        #
-        ssh_ip_extraction # Volame znova po zmene na serveru
-
-        echo -e "${CYAN}Traefik IP has been changed to ${RESET}${UNDERLINE}$ip_on_server${RESET}"
         echo
-        echo -e "${CYAN}Local IP is not exposed to VPS anymore${RESET}"
+        # Traefik remove comment symbol (#) function call for 3 different lines, after restart
+        remove_comment_symbol $domain_line_comment_1 $SSH_user $SSH_host $SSH_ip_path
+        remove_comment_symbol $domain_line_comment_2 $SSH_user $SSH_host $SSH_ip_path
+        remove_comment_symbol $domain_line_comment_3 $SSH_user $SSH_host $SSH_ip_path
+        reboot_traefik $SSH_user $SSH_host
+
         echo
         echo -e "${ORANGE}-------------------------- DONE --------------------------${RESET}"
         sleep 2
         exit
+
     else
         echo -e "${CYAN}Terminating script...${RESET}"
         sleep 2
@@ -125,18 +182,24 @@ get_connection_info
 if [ "$interface_id" == "en0" ]; then
   echo -e "${CYAN}Making Owncast accessible over${RESET} ${UNDERLINE}Wi-Fi${RESET}${CYAN}...${RESET}"
   echo -e "${CYAN}Checking local IPv4 adress...${RESET}"
-  sleep 3
+  sleep 2
 
 else
   echo -e "${CYAN}Making Owncast accessible over${RESET} ${UNDERLINE}Ethernet${RESET}${CYAN}...${RESET}"
   echo -e "${CYAN}Checking local IPv4 adress...${RESET}"
-  sleep 3
+  sleep 2
 fi
 
 # Lokalni ip adresa
 local_ip=$(ipconfig getifaddr $interface_id)
 
 function launch_owncast() {
+
+  # Traefik add comment symbol (#) function call for 3 different lines, after restart
+  add_comment_symbol $domain_line_comment_1 $SSH_user $SSH_host $SSH_ip_path
+  add_comment_symbol $domain_line_comment_2 $SSH_user $SSH_host $SSH_ip_path
+  add_comment_symbol $domain_line_comment_3 $SSH_user $SSH_host $SSH_ip_path
+  reboot_traefik $SSH_user $SSH_host
 
   ssh_ip_extraction
 
@@ -155,25 +218,6 @@ function launch_owncast() {
         echo
         echo -e "${CYAN}Openning OBS...${RESET}"
         open -a OBS
-
-        # Start Trakt Discord Presence python script
-        if [ "$Trakt_DcRP" = "true" ]; then
-
-            if pgrep -f DiscTrakt > /dev/null; then
-                echo -e "${ORANGE}The Trakt script is already running.${RESET}"
-                echo
-                echo -e "${CYAN}Restarting Trakt Discord Presence detection...${RESET}"
-                pkill -f DiscTrakt
-                sleep 2
-                nohup python3 /Users/maty/DEV/TraktDiscordRP/DiscTrakt > /dev/null 2>&1 &
-            else
-                echo -e "${CYAN}Starting Trakt Discord Presence detection...${RESET}"
-                nohup python3 /Users/maty/DEV/TraktDiscordRP/DiscTrakt > /dev/null 2>&1 &
-            fi
-        else
-            echo -e "${CYAN}Skipping discord presence Trakt function${RESET}"
-            echo -e "${CYAN}not configured in config.sh...${RESET}"
-        fi
 
         # Konec pri spravnem provedeni skriptu
         echo
