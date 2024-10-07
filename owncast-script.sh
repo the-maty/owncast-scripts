@@ -177,10 +177,10 @@ get_connection_info()
   echo -e "${ORANGE}Using interface:${RESET} ${UNDERLINE}$interface_id${RESET}"
 }
 
-# Zavolej funkci pro ziskani informaci o pripojeni
+# Zavolej funkci pro ziskani informaci o pripojeni      # disabled?
 get_connection_info
 
-if [ "$interface_id" == "en0" ]; then
+if [ "$interface_id" == "utun4" ]; then
   echo -e "${CYAN}Making Owncast accessible over${RESET} ${UNDERLINE}Wi-Fi${RESET}${CYAN}...${RESET}"
   echo -e "${CYAN}Checking local IPv4 adress...${RESET}"
   sleep 2
@@ -192,7 +192,8 @@ else
 fi
 
 # Lokalni ip adresa
-local_ip=$(ipconfig getifaddr $interface_id)
+#local_ip=$(ipconfig getifaddr $interface_id)    # Temp disabled local fixed value
+local_ip="10.66.66.2"
 
 function launch_owncast() {
 
@@ -202,9 +203,9 @@ function launch_owncast() {
   add_comment_symbol $domain_line_comment_3 $SSH_user $SSH_host $SSH_ip_path
   reboot_traefik $SSH_user $SSH_host
 
-  ssh_ip_extraction
+  #ssh_ip_extraction     # Temp disabled extraction function
 
-    if [ "$local_ip" == "$ip_on_server" ]; then
+    if [ "$local_ip" == "10.66.66.2" ]; then        # Edited pro fixed wireguard IP it was local_ip var
         clear
         echo
 
